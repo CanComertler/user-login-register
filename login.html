@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Login</title>
+    <!-- DaisyUI -->
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
+    <!-- Tailwind -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- Axios -->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+
+<body class="flex justify-center items-center min-h-screen">
+    <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">
+
+        <label class="label">E-mail</label>
+        <input type="email" class="input" id="emailInput" placeholder="Email" />
+
+        <label class="label">Password</label>
+        <input type="password" class="input" id="passwordInput" placeholder="Password" />
+
+        <button onclick="login()" class="btn btn-neutral mt-4" id="loginBtn">Login</button>
+        <a href="register.html" class="btn btn-neutral mt-4">Sign-Up</a>
+        <p id="sonuc" class="mt-2 font-bold flex justify-center"></p>
+    </fieldset>
+
+
+    <script>
+        const API_URL = "https://zafer.ngrok.io";
+        const ENDPOINT = "/auth/login";
+
+        function login() {
+            const email = document.getElementById("emailInput").value;
+            const password = document.getElementById("passwordInput").value;
+
+            axios.post(`${API_URL}${ENDPOINT}`, {
+                email: email,
+                password: password
+            })
+                .then((res) => {
+                    const token = res.data.token;
+                    const user = res.data.user;
+                    localStorage.setItem("token", token);
+                    localStorage.setItem("user", JSON.stringify(user));
+                    document.getElementById("sonuc").innerText = "Giriş başarılı - Yönlendiriliyorsunuz";
+                    setTimeout(() => {
+                        window.location.href = "create.html";
+                    }, 2000);
+                })
+
+
+                .catch((err) => {
+                    document.getElementById("sonuc").innerText = "Mail veya parola yanlış";
+                });
+        }
+
+    </script>
+
+
+</body>
+
+</html>

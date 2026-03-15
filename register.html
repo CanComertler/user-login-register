@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Register</title>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+
+<body class="flex justify-center items-center min-h-screen">
+    <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">
+
+        <label class="label">E-mail</label>
+        <input type="email" class="input" id="emailInput" placeholder="Email" />
+
+        <label class="label">Username</label>
+        <input type="text" class="input" id="usernameInput" placeholder="Username" />
+
+        <label class="label">Password</label>
+        <input type="password" class="input" id="passwordInput" placeholder="Password" />
+
+        <button class="btn btn-neutral mt-4" id="regBtn" onclick="register()">Register</button>
+    </fieldset>
+
+    <script>
+        const API_URL = "https://zafer.ngrok.io";
+        const ENDPOINT = "/auth/register";
+
+        const inputUsername = document.getElementById("usernameInput");
+        const inputEmail = document.getElementById("emailInput");
+        const inputPassword = document.getElementById("passwordInput");
+
+        function register() {
+            const username = inputUsername.value;
+            const email = inputEmail.value;
+            const password = inputPassword.value;
+
+            if (!username || !email || !password) {
+                alert("Tüm alanları doldurun");
+                return;
+            }
+
+            axios.post(API_URL + ENDPOINT, {
+                username: username,
+                email: email,
+                password: password
+            })
+            .then(function (res) {
+                const token = res.data.token;
+                const user = res.data.user;
+
+                localStorage.setItem("token", token);
+                localStorage.setItem("user", JSON.stringify(user));
+
+                window.location.href = "articles.html";
+            })
+            .catch(function (error) {
+                console.error(error);
+                alert("Kayıt sırasında hata oluştu");
+            });
+        }
+    </script>
+
+</body>
+
+</html>

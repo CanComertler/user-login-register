@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <title>Create Post</title>
+  <!-- DaisyUI -->
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
+  <!-- Tailwind -->
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <!-- Axios -->
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+
+<body class="flex justify-center items-center min-h-screen">
+
+
+  <fieldset class="fieldset bg-zinc-100 border-base-400 rounded-xl w-xs border p-4">
+
+    <nav class="flex justify-between items-center p-4 shadow bg-white rounded-xl">
+      <h1 class="text-2xl font-bold">Articles</h1>
+      <a class="btn btn-neutral rounded-xl" onclick="logout()">➖ Log Out</a>
+    </nav>
+    <label class="label">Title</label>
+    <input type="text" class="input rounded-xl" placeholder="My title" id="titleInput" />
+
+    <label class="label">Message</label>
+    <textarea class="textarea rounded-xl h-40" placeholder="Your message" id="messageInput"></textarea>
+
+    <select class="select rounded-xl" id="category">
+      <option value="Diğer">Diğer</option>
+      <option value="Spor">Spor</option>
+      <option value="Teknoloji">Teknoloji</option>
+      <option value="Haber">Haber</option>
+    </select>
+    <button class="btn btn-neutral mt-4 rounded-xl" id="saveBtn" onclick="save()">Save</button>
+    <p id="sonuc" class="mt-2 text-sm text-green-600"></p>
+  </fieldset>
+
+  <script>
+    const API_URL = "https://zafer.ngrok.io";
+    const ENDPOINT = "/posts";
+
+    const titleInput = document.getElementById("titleInput");
+    const messageInput = document.getElementById("messageInput");
+    const inputCategory = document.getElementById("category");
+
+    function logout() {
+      localStorage.removeItem("token");
+      window.location.href = "login.html";
+    }
+
+
+    if (!token) {
+      window.location.href = "login.html";
+    }
+
+    function save() {
+      const token = localStorage.getItem("token");
+      const title = titleInput.value;
+      const body = messageInput.value;
+      const category = inputCategory.value;
+
+      axios.post(API_URL + ENDPOINT,
+        { title: title, body: body, category: category },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      )
+        .then(function (response) {
+          console.log(response.data);
+          document.getElementById("sonuc").innerText = "Makale Başarı ile yayınlandı - Articles'a yönlendiriliyorsunuz";
+          setTimeout(() => {
+            window.location.href = "articles.html";
+          }, 2000);;
+        })
+        .catch(function (error) {
+          console.error(error);
+          alert("Hata oluştu");
+        });;
+    }
+
+  </script>
+
+
+</body>
+
+</html>
